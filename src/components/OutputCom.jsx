@@ -3,19 +3,12 @@ import { AspectRatio } from 'react-bootstrap-icons'
 
 const DynamicProgressBar = ({ label, percentage, color }) => {
 	return (
-		<div style={{ marginBottom: '10px' }}>
-			<div
-				style={{
-					display: 'flex',
-					justifyContent: 'space-between',
-					color: 'white',
-					marginBottom: '5px',
-				}}
-			>
+		<div className='progress_container'>
+			<div className='progress_bar'>
 				<span>{label}</span>
 				<span>{percentage}%</span>
 			</div>
-			<div className='progress' style={{ height: '2px' }}>
+			<div className='progress'>
 				<div
 					className={`progress-bar ${color}`}
 					role='progressbar'

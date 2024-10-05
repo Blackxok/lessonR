@@ -8,7 +8,7 @@ import {
 	XLg,
 } from 'react-bootstrap-icons'
 
-export default function InputCom() {
+export default function InputCom({ setLoader }) {
 	const fileInputRef = useRef(null)
 	const [selectedImage, setSelectedImage] = useState(null)
 	const [selectedFile, setSelectedFile] = useState(null)
@@ -53,6 +53,8 @@ export default function InputCom() {
 		const formData = new FormData()
 		formData.append('image', selectedFile) // Use 'image' as the key, can be changed
 
+		setLoader(true) // Set the loader
+
 		try {
 			// Send POST request to the backend
 			const response = await fetch('https://your-backend-url.com/upload', {
@@ -71,6 +73,7 @@ export default function InputCom() {
 			console.error('Error uploading image:', error)
 			alert('An error occurred while uploading the image.')
 		}
+		setLoader(false) // Reset the loader when done
 	}
 
 	return (
