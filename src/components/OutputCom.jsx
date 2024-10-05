@@ -42,8 +42,7 @@ const ProgressBarComponent = () => {
 
 	return (
 		<div className='output_component'>
-			<AspectRatio size={30} className='out_top' />{' '}
-			<h4>Result</h4>
+			<AspectRatio size={30} className='out_top' /> <h4>Result</h4>
 			{data.map((item, index) => (
 				<DynamicProgressBar
 					key={index}
@@ -52,7 +51,7 @@ const ProgressBarComponent = () => {
 					color={item.color}
 				/>
 			))}
-			<button className='btn btn-primary output_afresh'>Afresh</button>
+			{/* <button className='btn btn-primary output_afresh'>Afresh</button> */}
 		</div>
 	)
 }
