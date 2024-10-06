@@ -53,11 +53,16 @@ export default function InputCom({ setLoader }) {
 		const formData = new FormData()
 		formData.append('image', selectedFile) // Use 'image' as the key, can be changed
 
+		for (let pair of formData.entries()) {
+			formData.append(pair[0], pair[1]) // Use 'image' as the key, can be changed
+			console.log(pair[0], pair[1]) // Log the key-value pairs for debugging purposes (optional)
+		}
+
 		setLoader(true) // Set the loader
 
 		try {
 			// Send POST request to the backend
-			const response = await fetch('https://your-backend-url.com/upload', {
+			const response = await fetch('http://localhost:3000/upload', {
 				method: 'POST',
 				body: formData, // Send formData with the file
 			})
