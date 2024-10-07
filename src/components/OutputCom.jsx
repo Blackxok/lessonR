@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AspectRatio } from 'react-bootstrap-icons'
 
-const DynamicProgressBar = ({ label, percentage, color }) => {
+const DynamicProgressBar = ({ label, percentage }) => {
 	return (
 		<div className='progress_container'>
 			<div className='progress_bar'>
@@ -10,7 +10,7 @@ const DynamicProgressBar = ({ label, percentage, color }) => {
 			</div>
 			<div className='progress'>
 				<div
-					className={`progress-bar ${color}`}
+					className='progress-bar bg-green'
 					role='progressbar'
 					style={{ width: `${percentage}%` }}
 					aria-valuenow={percentage}
@@ -22,31 +22,31 @@ const DynamicProgressBar = ({ label, percentage, color }) => {
 	)
 }
 
-const ProgressBarComponent = () => {
-	// Dynamic percentages and labels
-	const [data, setData] = useState([
-		{ label: 'something 1', percentage: 82, color: 'bg-warning' },
-		{ label: 'something 2', percentage: 9, color: 'bg-secondary' },
-		{ label: 'something 3', percentage: 20, color: 'bg-danger' },
-		{ label: 'something 4', percentage: 12, color: 'bg-success' },
-		{ label: 'something 5', percentage: 23, color: 'bg-green' },
-		{ label: 'something 6', percentage: 52, color: 'bg-secondary' },
-	])
+const OutputCom = ({ result }) => {
+	const [data, setData] = useState([])
+	//
+	useEffect(() => {
+		if (result) {
+			setData(result)
+		}
+	}, [result])
 
 	return (
 		<div className='output_component'>
 			<AspectRatio size={30} className='out_top' /> <h4>Result</h4>
-			{data.map((item, index) => (
-				<DynamicProgressBar
-					key={index}
-					label={item.label}
-					percentage={item.percentage}
-					color={item.color}
-				/>
-			))}
-			{/* <button className='btn btn-primary output_afresh'>Afresh</button> */}
+			{data.length > 0 ? (
+				data.map((item, index) => (
+					<DynamicProgressBar
+						key={index}
+						label={item.label}
+						percentage={item.confidence * 100}
+					/>
+				))
+			) : (
+				<p style={{ color: 'white' }}>No data!. ): </p>
+			)}
 		</div>
 	)
 }
 
-export default ProgressBarComponent
+export default OutputCom

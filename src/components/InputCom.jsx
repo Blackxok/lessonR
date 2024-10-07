@@ -8,77 +8,72 @@ import {
 	XLg,
 } from 'react-bootstrap-icons'
 
-export default function InputCom({ setLoader }) {
+export default function InputCom({ setLoader, setResult }) {
 	const fileInputRef = useRef(null)
 	const [selectedImage, setSelectedImage] = useState(null)
 	const [selectedFile, setSelectedFile] = useState(null)
 
-	// Function to handle the click on the FiletypeJpg icon
+	// Handle the file picker button
 	const handleFilePickerClick = () => {
 		if (fileInputRef.current) {
-			fileInputRef.current.click() // Programmatically click the file input
+			fileInputRef.current.click()
 		}
 	}
 
-	// Function to handle file selection
+	// Handle the file input change
 	const handleFileChange = event => {
 		const file = event.target.files[0]
 		if (file) {
-			setSelectedFile(file) // Store the file for submission
+			setSelectedFile(file)
 			const reader = new FileReader()
 			reader.onload = e => {
-				setSelectedImage(e.target.result) // Set the image data URL to state
+				setSelectedImage(e.target.result)
 			}
-			reader.readAsDataURL(file) // Convert file to data URL
+			reader.readAsDataURL(file)
 		}
 	}
 
-	// Function to clear the selected image
+	// Clear the selected image and file
 	const clearImage = () => {
-		setSelectedImage(null) // Reset the image state
-		setSelectedFile(null) // Clear the file as well
+		setSelectedImage(null)
+		setSelectedFile(null)
 		if (fileInputRef.current) {
-			fileInputRef.current.value = '' // Reset the file input value
+			fileInputRef.current.value = ''
 		}
+		setResult(null) // Optionally reset result when clearing image
 	}
 
-	// Function to handle image submission to the backend
+	// Handle the form submission
 	const handleSubmit = async () => {
 		if (!selectedFile) {
 			alert('Please select an image to submit.')
 			return
 		}
 
-		// Create a FormData object and append the selected file
 		const formData = new FormData()
-		formData.append('image', selectedFile) // Use 'image' as the key, can be changed
+		formData.append('file', selectedFile)
 
-		for (let pair of formData.entries()) {
-			formData.append(pair[0], pair[1]) // Use 'image' as the key, can be changed
-			console.log(pair[0], pair[1]) // Log the key-value pairs for debugging purposes (optional)
-		}
-
-		setLoader(true) // Set the loader
+		setLoader(true)
 
 		try {
-			// Send POST request to the backend
-			const response = await fetch('http://localhost:3000/upload', {
+			// Send the file to the server
+			const response = await fetch('http://149.28.56.114/image', {
 				method: 'POST',
-				body: formData, // Send formData with the file
+				body: formData,
 			})
-
 			if (response.ok) {
-				console.log('Image uploaded successfully!')
-				alert('Image uploaded successfully!')
+				const result = await response.json()
+				setResult(result) // Send result to parent component
+				// console.log('Image uploaded successfully!')
 			} else {
-				console.error('Image upload failed')
-				alert('Failed to upload image.')
+				const errorResult = await response.json()
+				console.log(`Failed image: ${errorResult.message || 'Error '}`)
 			}
 		} catch (error) {
-			console.error('Error uploading image:', error)
-			alert('An error occurred while uploading the image.')
+			console.error('An error occurred:', error)
+			console.log('An error occurred while uploading the image.')
 		}
-		setLoader(false) // Reset the loader when done
+		setLoader(false)
 	}
 
 	return (
@@ -114,14 +109,6 @@ export default function InputCom({ setLoader }) {
 				ref={fileInputRef}
 				onChange={handleFileChange}
 			/>
-			{/* <div className='input_buttons'>
-				<button className='btn btn-primary' onClick={handleSubmit}>
-					Submit
-				</button>
-				<button className='btn btn-primary' onClick={clearImage}>
-					Clear
-				</button>
-			</div> */}
 		</>
 	)
 }
