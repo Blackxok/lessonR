@@ -22,6 +22,7 @@ const DynamicProgressBar = ({ label, percentage }) => {
 	)
 }
 
+<<<<<<< HEAD
 const OutputCom = ({ result, secondResult, toggle }) => {
 	const [data, setData] = useState([])
 
@@ -32,6 +33,16 @@ const OutputCom = ({ result, secondResult, toggle }) => {
 			setData(result)
 		}
 	}, [result, secondResult, toggle])
+=======
+const OutputCom = ({ result }) => {
+	const [data, setData] = useState([])
+	//
+	useEffect(() => {
+		if (result) {
+			setData(result)
+		}
+	}, [result])
+>>>>>>> 77f9d13a4625a619e654fe2d390adf23a65dddf8
 
 	return (
 		<div className='output_component'>
@@ -45,10 +56,18 @@ const OutputCom = ({ result, secondResult, toggle }) => {
 					/>
 				))
 			) : (
+<<<<<<< HEAD
 				<p style={{ color: 'white' }}>No data! ): </p>
+=======
+				<p style={{ color: 'white' }}>No data!. ): </p>
+>>>>>>> 77f9d13a4625a619e654fe2d390adf23a65dddf8
 			)}
 		</div>
 	)
 }
 
+<<<<<<< HEAD
 export default OutputCom
+=======
+export default OutputCom
+>>>>>>> 77f9d13a4625a619e654fe2d390adf23a65dddf8

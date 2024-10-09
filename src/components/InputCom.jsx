@@ -1,104 +1,115 @@
 import React, { useRef, useState } from 'react'
 import { FiletypeJpg, Image, ImageAlt, Upload, Virus, Webcam, XLg } from 'react-bootstrap-icons'
 
-export default function InputCom({ setLoader, setResult }) {
-  const fileInputRef = useRef(null)
-  const [selectedImage, setSelectedImage] = useState(null)
-  const [selectedFile, setSelectedFile] = useState(null)
-  const [activeApi, setActiveApi] = useState('api1')
+export default function InputCom({ setLoader }) {
+	const fileInputRef = useRef(null)
+	const [selectedImage, setSelectedImage] = useState(null)
+	const [selectedFile, setSelectedFile] = useState(null)
 
-  const handleFilePickerClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click()
-    }
-  }
+	// Function to handle the click on the FiletypeJpg icon
+	const handleFilePickerClick = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click() // Programmatically click the file input
+		}
+	}
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0]
-    if (file) {
-      setSelectedFile(file)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setSelectedImage(e.target.result)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+	// Function to handle file selection
+	const handleFileChange = event => {
+		const file = event.target.files[0]
+		if (file) {
+			setSelectedFile(file) // Store the file for submission
+			const reader = new FileReader()
+			reader.onload = e => {
+				setSelectedImage(e.target.result) // Set the image data URL to state
+			}
+			reader.readAsDataURL(file) // Convert file to data URL
+		}
+	}
 
-  const clearImage = () => {
-    setSelectedImage(null)
-    setSelectedFile(null)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-    setResult(null)
-  }
+	// Function to clear the selected image
+	const clearImage = () => {
+		setSelectedImage(null) // Reset the image state
+		setSelectedFile(null) // Clear the file as well
+		if (fileInputRef.current) {
+			fileInputRef.current.value = '' // Reset the file input value
+		}
+	}
 
-  const handleSubmit = async () => {
-		setActiveApi((prevApi) => (prevApi === 'api1' ? 'api2' : 'api1'))
-    if (!selectedFile) {
-      alert('Please select an image to submit.')
-      return
-    }
+	// Function to handle image submission to the backend
+	const handleSubmit = async () => {
+		if (!selectedFile) {
+			alert('Please select an image to submit.')
+			return
+		}
 
-    const formData = new FormData()
-    formData.append('file', selectedFile)
+		// Create a FormData object and append the selected file
+		const formData = new FormData()
+		formData.append('image', selectedFile) // Use 'image' as the key, can be changed
 
-    setLoader(true)
+		setLoader(true) // Set the loader
 
-    try {
-      const apiUrl =
-        activeApi === 'api1' ? 'http://149.28.56.114/image' : 'http://149.28.56.114/iscovid'
+		try {
+			// Send POST request to the backend
+			const response = await fetch('https://your-backend-url.com/upload', {
+				method: 'POST',
+				body: formData, // Send formData with the file
+			})
 
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        body: formData,
-      })
+			if (response.ok) {
+				console.log('Image uploaded successfully!')
+				alert('Image uploaded successfully!')
+			} else {
+				console.error('Image upload failed')
+				alert('Failed to upload image.')
+			}
+		} catch (error) {
+			console.error('Error uploading image:', error)
+			alert('An error occurred while uploading the image.')
+		}
+		setLoader(false) // Reset the loader when done
+	}
 
-      if (response.ok) {
-        const result = await response.json()
-        setResult(result)
-      } else {
-        const errorResult = await response.json()
-        console.log(`Failed: ${errorResult.message || 'Error'}`)
-      }
-    } catch (error) {
-      console.error('An error occurred:', error)
-      console.log('An error occurred while uploading the image.')
-    }
-    setLoader(false)
-  }
-
-  return (
-    <>
-      <div className="input_box">
-        <div className="input_img">
-          <div className="img_top_icons">
-            <Image size={30} className="top_icon is_input" />
-            <XLg size={30} className="top_icon cancel" onClick={clearImage} />
-          </div>
-          <div className="input_content">
-            {selectedImage ? (
-              <img src={selectedImage} alt="Selected" className="input_img" />
-            ) : (
-              <ImageAlt size={300} color="white" />
-            )}
-          </div>
-        </div>
-        <div className="input_functions">
-          <Upload size={30} className="input_f" onClick={handleSubmit} />
-          <Webcam size={30} className="input_f" />
-          <FiletypeJpg size={30} className="input_f" onClick={handleFilePickerClick} />
-					<Virus size={30} className="input_f" onClick={handleSubmit} />
-        </div>
-      </div>
-      <input
-        type="file"
-        accept="image/jpeg"
-        style={{ display: 'none' }}
-        ref={fileInputRef}
-        onChange={handleFileChange}
-      />
-    </>
-  )
+	return (
+		<>
+			<div className='input_box'>
+				<div className='input_img'>
+					<div className='img_top_icons'>
+						<Image size={30} className='top_icon is_input' />
+						<XLg size={30} className='top_icon cancel' onClick={clearImage} />
+					</div>
+					<div className='input_content'>
+						{selectedImage ? (
+							<img src={selectedImage} alt='Selected' className='input_img' />
+						) : (
+							<ImageAlt size={300} color='white' />
+						)}
+					</div>
+				</div>
+				<div className='input_functions'>
+					<Upload size={30} className='input_f' onClick={handleSubmit} />
+					<Webcam size={30} className='input_f' />
+					<FiletypeJpg
+						size={30}
+						className='input_f'
+						onClick={handleFilePickerClick}
+					/>
+				</div>
+			</div>
+			<input
+				type='file'
+				accept='image/jpeg'
+				style={{ display: 'none' }}
+				ref={fileInputRef}
+				onChange={handleFileChange}
+			/>
+			{/* <div className='input_buttons'>
+				<button className='btn btn-primary' onClick={handleSubmit}>
+					Submit
+				</button>
+				<button className='btn btn-primary' onClick={clearImage}>
+					Clear
+				</button>
+			</div> */}
+		</>
+	)
 }
