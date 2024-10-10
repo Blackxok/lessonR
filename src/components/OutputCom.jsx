@@ -35,7 +35,8 @@ const OutputCom = ({ result, secondResult, toggle }) => {
 
 	return (
 		<div className='output_component'>
-			<AspectRatio size={30} className='out_top' /> <h4>Result</h4>
+			<AspectRatio size={30} className='out_top' />
+			<h4>Result</h4>
 			{data.length > 0 ? (
 				data.map((item, index) => (
 					<DynamicProgressBar
