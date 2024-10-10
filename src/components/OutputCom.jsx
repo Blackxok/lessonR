@@ -22,14 +22,16 @@ const DynamicProgressBar = ({ label, percentage }) => {
 	)
 }
 
-const OutputCom = ({ result }) => {
+const OutputCom = ({ result, secondResult, toggle }) => {
 	const [data, setData] = useState([])
-	//
+
 	useEffect(() => {
-		if (result) {
+		if (toggle && secondResult) {
+			setData(secondResult)
+		} else if (result) {
 			setData(result)
 		}
-	}, [result])
+	}, [result, secondResult, toggle])
 
 	return (
 		<div className='output_component'>
@@ -43,7 +45,7 @@ const OutputCom = ({ result }) => {
 					/>
 				))
 			) : (
-				<p style={{ color: 'white' }}>No data!. ): </p>
+				<p style={{ color: 'white' }}>No data! ): </p>
 			)}
 		</div>
 	)
