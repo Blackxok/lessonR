@@ -22,21 +22,21 @@ const DynamicProgressBar = ({ label, percentage }) => {
 	)
 }
 
-const OutputCom = ({ result, secondResult, toggle }) => {
+const OutputCom = ({ result, secondResult, title }) => {
 	const [data, setData] = useState([])
 
 	useEffect(() => {
-		if (toggle && secondResult) {
+		if (secondResult) {
 			setData(secondResult)
 		} else if (result) {
 			setData(result)
 		}
-	}, [result, secondResult, toggle])
+	}, [result, secondResult])
 
 	return (
 		<div className='output_component'>
 			<AspectRatio size={30} className='out_top' />
-			<h4>Result</h4>
+			<h4>{title}</h4>
 			{data.length > 0 ? (
 				data.map((item, index) => (
 					<DynamicProgressBar

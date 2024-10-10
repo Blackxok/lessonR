@@ -5,12 +5,17 @@ import OutputCom from './OutputCom'
 const Home = () => {
 	const [loader, setLoader] = useState(false)
 	const [result, setResult] = useState(null)
+	const [title, setTitle] = useState('Result')
 
 	return (
 		<>
 			<div className='container home'>
 				<div className='column'>
-					<InputCom setLoader={setLoader} setResult={setResult} />
+					<InputCom
+						setLoader={setLoader}
+						setResult={setResult}
+						setTitle={setTitle}
+					/>
 				</div>
 				{loader && (
 					<div className='column loader_col'>
@@ -20,7 +25,7 @@ const Home = () => {
 					</div>
 				)}
 				<div className='column'>
-					<OutputCom result={result} />
+					<OutputCom result={result} title={title} />
 				</div>
 			</div>
 		</>
