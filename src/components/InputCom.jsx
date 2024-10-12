@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import {
 	FiletypeJpg,
 	Image,
-	ImageAlt,
+	LungsFill,
 	Upload,
 	Virus,
 	XLg,
@@ -146,7 +146,7 @@ export default function InputCom({
 						{selectedImage ? (
 							<img src={selectedImage} alt='Selected' className='input_img' />
 						) : (
-							<ImageAlt size={300} color='white' />
+							<LungsFill size={300} color='white' />
 						)}
 					</div>
 				</div>
