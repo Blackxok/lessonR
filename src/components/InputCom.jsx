@@ -53,6 +53,7 @@ export default function InputCom({
 		const checkedConfidence = checked[0].confidence * 100
 		const checkedLabel = checked[0].label
 		// console.log(checkedLabel)
+		setLoader(true)
 
 		if (checkedConfidence >= 50 && checkedLabel === 'chest_image') {
 			setIsitchest(checked)
@@ -71,8 +72,6 @@ export default function InputCom({
 
 		const formData = new FormData()
 		formData.append('file', selectedFile)
-
-		setLoader(true)
 
 		try {
 			const apiUrl =

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AspectRatio } from 'react-bootstrap-icons'
 
 const DynamicProgressBar = ({ label, percentage }) => {
@@ -23,13 +23,13 @@ const DynamicProgressBar = ({ label, percentage }) => {
 }
 
 const OutputCom = ({ result, title, isitchest, correct }) => {
-	// UseRef to store the data reference
-	const dataRef = useRef([])
+	// Use useState to store data
+	const [data, setData] = useState([])
 
-	// Update dataRef when result changes
+	// Update data when result changes
 	useEffect(() => {
 		if (result) {
-			dataRef.current = result
+			setData(result) // Set state using setData
 		}
 	}, [result])
 
@@ -52,8 +52,8 @@ const OutputCom = ({ result, title, isitchest, correct }) => {
 			</div>
 			<div className='output_component'>
 				<h4>{title}</h4>
-				{correct && dataRef.current.length > 0 ? (
-					dataRef.current.map((item, index) => (
+				{correct && data.length > 0 ? (
+					data.map((item, index) => (
 						<DynamicProgressBar
 							key={index}
 							label={item.label}
