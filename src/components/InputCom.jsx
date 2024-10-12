@@ -5,11 +5,16 @@ import {
 	ImageAlt,
 	Upload,
 	Virus,
-	Webcam,
 	XLg,
 } from 'react-bootstrap-icons'
 
-export default function InputCom({ setLoader, setResult, setTitle}) {
+export default function InputCom({
+	setLoader,
+	setResult,
+	setTitle,
+	setIsitchest,
+	setCorrect,
+}) {
 	const fileInputRef = useRef(null)
 	const [selectedImage, setSelectedImage] = useState(null)
 	const [selectedFile, setSelectedFile] = useState(null)
@@ -40,9 +45,23 @@ export default function InputCom({ setLoader, setResult, setTitle}) {
 			fileInputRef.current.value = ''
 		}
 		setResult(null)
+		setCorrect(false)
+		setIsitchest(false)
 	}
 
-	const handleSubmit = async () => {
+	const handleSubmit = async checked => {
+		const checkedConfidence = checked[0].confidence * 100
+		const checkedLabel = checked[0].label
+		// console.log(checkedLabel)
+
+		if (checkedConfidence >= 50 && checkedLabel === 'chest_image') {
+			setIsitchest(checked)
+			setCorrect(true)
+		} else {
+			setCorrect(false)
+			setIsitchest(checked)
+		}
+
 		setActiveApi(prevApi => (prevApi === 'api1' ? 'api2' : 'api1'))
 
 		if (!selectedFile) {
@@ -84,7 +103,38 @@ export default function InputCom({ setLoader, setResult, setTitle}) {
 		}
 		setLoader(false)
 	}
+	//
+	//
+	const checkImg = async () => {
+		if (!selectedFile) {
+			alert('Please select an image to submit.')
+			return
+		}
 
+		const formData = new FormData()
+		formData.append('file', selectedFile)
+
+		setLoader(true)
+
+		try {
+			const response = await fetch('http://149.28.56.114/onlychest', {
+				method: 'POST',
+				body: formData,
+			})
+
+			if (response.ok) {
+				const result = await response.json()
+				handleSubmit(result)
+			} else {
+				const errorResult = await response.json()
+				console.log(`Failed: ${errorResult.message || 'Error'}`)
+			}
+		} catch (error) {
+			console.error('An error occurred:', error)
+			console.log('An error occurred while uploading the image.')
+		}
+		setLoader(false)
+	}
 	return (
 		<>
 			<div className='input_box'>
@@ -102,14 +152,14 @@ export default function InputCom({ setLoader, setResult, setTitle}) {
 					</div>
 				</div>
 				<div className='input_functions'>
-					<Upload size={30} className='input_f' onClick={handleSubmit} />
-					<Webcam size={30} className='input_f' />
+					<Upload size={30} className='input_f' onClick={checkImg} />
+					{/* <Webcam size={30} className='input_f' /> */}
 					<FiletypeJpg
 						size={30}
 						className='input_f'
 						onClick={handleFilePickerClick}
 					/>
-					<Virus size={30} className='input_f' onClick={handleSubmit} />
+					<Virus size={30} className='input_f' onClick={checkImg} />
 				</div>
 			</div>
 			<input

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { AspectRatio } from 'react-bootstrap-icons'
 
 const DynamicProgressBar = ({ label, percentage }) => {
@@ -22,33 +22,49 @@ const DynamicProgressBar = ({ label, percentage }) => {
 	)
 }
 
-const OutputCom = ({ result, secondResult, title }) => {
-	const [data, setData] = useState([])
+const OutputCom = ({ result, title, isitchest, correct }) => {
+	// UseRef to store the data reference
+	const dataRef = useRef([])
 
+	// Update dataRef when result changes
 	useEffect(() => {
-		if (secondResult) {
-			setData(secondResult)
-		} else if (result) {
-			setData(result)
+		if (result) {
+			dataRef.current = result
 		}
-	}, [result, secondResult])
+	}, [result])
 
 	return (
-		<div className='output_component'>
-			<AspectRatio size={30} className='out_top' />
-			<h4>{title}</h4>
-			{data.length > 0 ? (
-				data.map((item, index) => (
-					<DynamicProgressBar
-						key={index}
-						label={item.label}
-						percentage={item.confidence * 100}
-					/>
-				))
-			) : (
-				<p style={{ color: 'white' }}>No data! ): </p>
-			)}
-		</div>
+		<>
+			<div className='top_output'>
+				<AspectRatio size={30} className='out_top' />
+				<h4>Is It Chest</h4>
+				{isitchest.length > 0 ? (
+					isitchest.map((item, index) => (
+						<DynamicProgressBar
+							key={index}
+							label={item.label}
+							percentage={Math.round(item.confidence * 100)}
+						/>
+					))
+				) : (
+					<p style={{ color: 'white' }}>No picture selected.</p>
+				)}
+			</div>
+			<div className='output_component'>
+				<h4>{title}</h4>
+				{correct && dataRef.current.length > 0 ? (
+					dataRef.current.map((item, index) => (
+						<DynamicProgressBar
+							key={index}
+							label={item.label}
+							percentage={Math.round(item.confidence * 100)}
+						/>
+					))
+				) : (
+					<p style={{ color: 'white' }}>No data! ):</p>
+				)}
+			</div>
+		</>
 	)
 }
 

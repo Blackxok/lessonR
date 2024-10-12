@@ -6,6 +6,8 @@ const Home = () => {
 	const [loader, setLoader] = useState(false)
 	const [result, setResult] = useState(null)
 	const [title, setTitle] = useState('Result')
+	const [isitchest, setIsitchest] = useState(false)
+	const [correct, setCorrect] = useState(null)
 
 	return (
 		<>
@@ -15,6 +17,8 @@ const Home = () => {
 						setLoader={setLoader}
 						setResult={setResult}
 						setTitle={setTitle}
+						setIsitchest={setIsitchest}
+						setCorrect={setCorrect}
 					/>
 				</div>
 				{loader && (
@@ -25,7 +29,7 @@ const Home = () => {
 					</div>
 				)}
 				<div className='column'>
-					<OutputCom result={result} title={title} />
+					<OutputCom result={result} title={title} isitchest={isitchest} correct={correct}/>
 				</div>
 			</div>
 		</>

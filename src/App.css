@@ -102,7 +102,13 @@
 	width: 500px;
 	background-color: #2c2f33;
 	padding: 20px;
-	border-radius: 5px;
+	border-radius: 0px 0px 5px 5px;
+}
+.top_output {
+	width: 500px;
+	background-color: #2c2f33;
+	padding: 20px;
+	border-radius: 5px 5px 0px 0px;
 }
 .output_afresh {
 	width: 100%;
@@ -116,7 +122,8 @@
 	background: white !important;
 	color: #2c2f33;
 }
-.output_component h4 {
+.output_component h4,
+.top_output h4 {
 	color: white;
 	text-align: center;
 	user-select: none;
